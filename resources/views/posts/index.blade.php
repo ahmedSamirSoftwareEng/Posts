@@ -5,7 +5,7 @@
     <div class="text-center">
 
         <a class=" btn btn-success btn-lg text-white text-decoration-none m-3"
-         href="{{ route('createPost') }}">Create Post </a>
+         href="{{ route('posts.create') }}">Create Post</a>
 
     </div>
     <div class="container">
@@ -26,29 +26,32 @@
                         <th scope="row">{{ $post['id'] }}</th>
                         <td>{{ $post['title'] }}</td>
                         <td>{{ $post['posted_by'] }}</td>
-                        <td>{{ $post['created_at'] }}</td>
+                        <td>{{ $post['created_at'] ->format('Y-m-d') }}</td>
                         <td>
                             {{-- show post --}}
 
                             <a class=" btn btn-primary text-white text-decoration-none"
-                                href="{{ route('showPost', $post['id']) }}">view</a>
+                                href="{{ route('posts.show', $post['id']) }}">view</a>
 
 
                             {{-- edit post --}}
 
                             <a class=" btn btn-success text-white text-decoration-none"
-                                href="{{ route('editPost', $post['id']) }}">edit</a>
+                                href="{{ route('posts.edit', $post['id']) }}">edit</a>
 
 
                             {{-- delete post --}}
-                            <button class="btn btn-danger">
-                                delete
-                            </button>
+                           <a href="{{ route('posts.destroy', $post['id']) }}" class="btn btn-danger">Delete</a>
 
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        {{-- Pagination links --}}
+
+        <div class="d-flex justify-content-center">
+            {{ $posts->links() }}
+        </div>
     </div>
 @endsection

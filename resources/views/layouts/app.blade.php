@@ -7,7 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light ">
         <a class="navbar-brand" href="#">ITI</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -15,13 +16,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="{{ route('showPosts') }}">AllPosts</a>
+              <a class="nav-link" href="{{ route('posts.index') }}">AllPosts</a>
             </li>
           </ul>
         </div>
       </nav>
+   </div>
 
-    <div class="bg-light">
+    <div class="container">
         @yield('content')
     </div>
 
