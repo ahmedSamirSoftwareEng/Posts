@@ -3,9 +3,8 @@
 @section('content')
     <h2 class="text-center">Create Post</h2>
     <div class="container w-50">
-        <form method="POST" action="{{ route('posts.store') }}">
+        <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
             @csrf
-
             {{-- post title --}}
             <div class="form-group m-2">
                 <label for="formGroupExampleInput"> Post Title</label>
@@ -18,15 +17,20 @@
                 <input type="text" class="form-control" name ="description" value="{{ old('description') }}"
                     id="formGroupExampleInput2" placeholder="Post Body">
             </div>
+            {{-- image --}}
+            <div class="form-group m-2">
+                <label for="formGroupExampleInput2">Image</label>
+                <input type="file" class="form-control" name="image" id="formGroupExampleInput2">
+            </div>
             {{-- posted by --}}
             <div class="form-group m-2">
                 <label for="formGroupExampleInput2">Posted By</label>
-                <select class="form-control" name="posted_by" id="">
-                    <option value="Ahmed">Ahmed</option>
-                    <option value="omar">omar</option>
-                    <option value="ali">ali</option>
-                    <option value="hassan">hassan</option>
-                    <option value="mohamed">mohamed</option>
+                <select class="form-control" name="user_id" id="">
+                    @foreach ( $users as $user)
+
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+
+                    @endforeach
                 </select>
             </div>
             {{-- error --}}

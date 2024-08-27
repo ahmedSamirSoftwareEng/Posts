@@ -15,10 +15,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item active">
+
               <a class="nav-link" href="{{ route('posts.index') }}">AllPosts</a>
-            </li>
-          </ul>
+
+
+
+          <a class="nav-link" href="{{ route('users.index') }}">AllUsers</a>
+            </ul>
         </div>
       </nav>
    </div>

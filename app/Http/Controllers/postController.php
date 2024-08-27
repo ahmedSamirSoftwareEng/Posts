@@ -1,72 +1,122 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Validation\Rule;
 
-use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostsRequest;
+use Illuminate\Validation\Rule;
 
 class postController extends Controller
 {
-    private $creators = ['Ahmed', 'omar', 'ali', 'mohamed', 'hassan'];
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $posts=Post::paginate(3);
-        return view('posts.index', ['posts' => $posts]);
+        // paginate posts Retrieve both active and soft-deleted posts
+        $posts = Post::withTrashed()->paginate(3);
+
+
+        return view('posts.index', compact('posts'));
     }
 
-    public function showPost($id)
+    public function restore($id)
     {
-        $post = Post::find($id);
-        return view('posts.show', ['post' => $post]);
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->restore();
+
+
+        return redirect()->route('posts.index')->with('success', 'Post restored successfully!');
     }
-    public function destroyPost($id){
-        $post=Post::find($id);
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // get all users
+        $users = User::all();
+
+        return view('posts.create', compact('users'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StorePostRequest $request)
+    {
+        $image_path = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image_path = $image->store("", 'posts_images');
+        }
+        $request_data = $request->all();
+        $request_data['image'] = $image_path;
+        $post = Post::create($request_data);
+        return to_route('posts.index', $post)->with('success', 'Post created successfully');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Post $post)
+    {
+        return view('posts.show', compact('post'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Post $post)
+
+    {
+        $users = User::all();
+        return view('posts.edit', compact('post'), compact('users'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdatePostsRequest $request, Post $post)
+    {
+        if ($request->hasFile('image')) {
+            // delete old image
+            if ($post->image) {
+                $path = public_path('posts_images/images/' . $post->image);
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+            $image = $request->file('image');
+            $image_path = $image->store("", 'posts_images');
+        }
+        $request_data = $request->all();
+        $request_data['image'] = $image_path;
+        $post->update($request_data);
+        return to_route('posts.index', $post)->with('success', 'Post updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Post $post)
+    {
+        // delete image
+        if ($post->image) {
+            $path = public_path('posts_images/images/' . $post->image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
         $post->delete();
-        return redirect('/');
-    }
-    public function createPost(){
-        return view('posts.create');
+        return to_route('posts.index')->with('success', 'Post deleted successfully');
     }
 
-    public function storePost(Request $request){
-
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'posted_by' => ['required',Rule::in($this->creators)],
-        ]);
 
 
-        $request_data=$request->all();
-        $post = new Post();
-        $post->title = $request_data['title'];
-        $post->description = $request_data['description'];
-        $post->posted_by = $request_data['posted_by'];
-        $post->save();
-        return redirect('/');
-    }
 
-    public function editPost($id)
-    {
-        $post = Post::find($id);
-        return view('posts.edit', ['post' => $post]);
-    }
 
-    public function updatePost(Request $request, $id)
-    {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'posted_by' => ['required',Rule::in($this->creators)],
-        ]);
-
-        $request_data=$request->all();
-        $post = Post::find($id);
-        $post->title = $request_data['title'];
-        $post->description = $request_data['description'];
-        $post->posted_by = $request_data['posted_by'];
-        $post->update();
-        return redirect('/');
-    }
 }

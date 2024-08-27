@@ -3,27 +3,40 @@
 @section('content')
 <h2 class="text-center">Edit Post</h2>
 <div class="container w-50">
-    <form method="POST" action="{{ route('posts.update', $post['id']) }}">
+    <form method="POST" action="{{ route('posts.update', $post) }} " enctype="multipart/form-data">
         @csrf
+        @method('PATCH')
         {{-- post title --}}
         <div class="form-group m-2">
           <label for="formGroupExampleInput"> Post Title</label>
-          <input type="text" class="form-control" name="title" id="formGroupExampleInput" placeholder="{{ $post['title'] }}">
+          <input type="text" class="form-control"
+          name="title" id="formGroupExampleInput" value="{{ $post['title']?:old('title') }}">
         </div>
         {{-- post body --}}
         <div class="form-group m-2">
           <label for="formGroupExampleInput2">Post Body</label>
-          <input type="text" class="form-control" name ="description" id="formGroupExampleInput2" placeholder="{{ $post['description'] }}">
+          <input type="text" class="form-control" name ="description"
+          id="formGroupExampleInput2" value="{{ $post['description']?: old('description') }}">
         </div>
+        {{-- image --}}
+        <img src="{{ asset('posts_images/images/' . $post->image) }}" width="100px" alt="">
+            <div class="form-group m-2">
+                <label for="formGroupExampleInput2">Image</label>
+                <input type="file" class="form-control" name="image" id="formGroupExampleInput2">
+            </div>
         {{-- posted by --}}
         <div class="form-group m-2">
           <label for="formGroupExampleInput2">Posted By</label>
-          <select class="form-control" name="posted_by" id="">
-            <option value="Ahmed">Ahmed</option>
-            <option value="ali">ali</option>
-            <option value="omar">omar</option>
-            <option value="hassan">hassan</option>
-            <option value="mohamed">mohamed</option>
+          <select class="form-control" name="user_id" id="">
+            <option value="{{ $post['user_id'] }}">{{ $post['user']['name'] }}</option>
+
+            @foreach ( $users as $user )
+            @if ($user->id == $post['user_id'])
+            @continue
+            @endif
+            <option value="{{ $user->id }}">{{ $user->name }}</option>
+            @endforeach
+
           </select>
         </div>
         {{-- error --}}
