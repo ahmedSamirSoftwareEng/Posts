@@ -26,7 +26,10 @@
                     <th scope="col">created at</th>
                     <th scope="col">Slug</th>
                     <th scope="col">trashed</th>
+                    @auth
                     <th scope="col">Actions</th>
+                        
+                    @endauth
                 </tr>
             </thead>
             <tbody>
@@ -50,6 +53,8 @@
                         </td>
 
                         <td >
+                            @auth
+
                             <div class="d-flex justify-content-start gap-2">
 
 
@@ -79,6 +84,7 @@
 
                         </div>
 
+                        @endauth
                         </td>
                     </tr>
                 @endforeach

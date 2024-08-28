@@ -7,17 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostsRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class postController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth')->except(['index', 'show']);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         // paginate posts Retrieve both active and soft-deleted posts
-        $posts = Post::withTrashed()->paginate(3);
+        $posts = Post::paginate(3);
 
         return view('posts.index', compact('posts'));
     }
@@ -47,6 +51,10 @@ class postController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+
+        $user =Auth::user();
+
+        // dd($user);
         $image_path = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -54,8 +62,9 @@ class postController extends Controller
         }
         $request_data = $request->all();
         $request_data['image'] = $image_path;
-        $post = Post::create($request_data);
-        return to_route('posts.index', $post)->with('success', 'Post created successfully');
+        $request_data['user_id'] = $user->id;
+        Post::create($request_data);
+        return to_route('posts.index')->with('success', 'Post created successfully');
     }
 
     /**
@@ -81,6 +90,9 @@ class postController extends Controller
      */
     public function update(UpdatePostsRequest $request, Post $post)
     {
+
+
+
         if ($request->hasFile('image')) {
             // delete old image
             if ($post->image) {
@@ -94,7 +106,9 @@ class postController extends Controller
         }
         $request_data = $request->all();
         $request_data['image'] = $image_path;
+
         $post->update($request_data);
+
         return to_route('posts.index', $post)->with('success', 'Post updated successfully');
     }
 

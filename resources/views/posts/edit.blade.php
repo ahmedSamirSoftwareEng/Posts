@@ -24,21 +24,8 @@
                 <label for="formGroupExampleInput2">Image</label>
                 <input type="file" class="form-control" name="image" id="formGroupExampleInput2">
             </div>
-        {{-- posted by --}}
-        <div class="form-group m-2">
-          <label for="formGroupExampleInput2">Posted By</label>
-          <select class="form-control" name="user_id" id="">
-            <option value="{{ $post['user_id'] }}">{{ $post['user']['name'] }}</option>
+       
 
-            @foreach ( $users as $user )
-            @if ($user->id == $post['user_id'])
-            @continue
-            @endif
-            <option value="{{ $user->id }}">{{ $user->name }}</option>
-            @endforeach
-
-          </select>
-        </div>
         {{-- error --}}
         @if ($errors->any())
         <div class="alert alert-danger">

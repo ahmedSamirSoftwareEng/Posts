@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePostsRequest extends FormRequest
@@ -11,7 +12,8 @@ class UpdatePostsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // return true;
+       return $this->user()->can('update', $this->post);
     }
 
     /**
@@ -25,7 +27,7 @@ class UpdatePostsRequest extends FormRequest
             'title' => ['required ', 'min:3'],
             'description' => ['required', 'min:10'],
             'image' => ["nullable", 'max:2048'],
-            'user_id' => ['required'],
+
         ];
     }
     function messages(): array
@@ -34,7 +36,7 @@ class UpdatePostsRequest extends FormRequest
             'title.required' => 'A title is required',
             'description.required' => 'A description is required',
             'image.max' => 'The image size should not be more than 2MB',
-            'user_id.exists' => 'The user does not exist'
+
         ];
     }
 }

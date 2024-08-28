@@ -2,9 +2,14 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\postController;
-use App\Http\Controllers\userController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HomeController;
+
+
+
 
 Route::resource('posts', postController::class);
+
 
 
 
@@ -23,6 +28,9 @@ Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('po
 #endregion
 
 
+
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+

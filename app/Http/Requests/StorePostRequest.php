@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\PostLimit;
 
 class StorePostRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true; // Adjust this if you have authorization logic
     }
 
     /**
@@ -22,19 +23,30 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'min:10'],
-            'image' => ['nullable', 'image', 'max:2048'],
-            'user_id' => ['required', 'exists:users,id'],
+            'title' => ['required', 'min:3', new PostLimit],
+            'description' => ['required', 'min:10'],
+            'image' => ['nullable', 'max:2048'],
         ];
     }
+    
+    // function passedValidation(){
+
+    // }
+    // function prepareForValidation(){
+
+    // }
+
+    /**
+     * Get the custom messages for validation errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
-            'title.required' => 'A title is required',
-            'description.required' => 'A description is required',
-            'image.max' => 'The image size should not be more than 2MB',
-            'user_id.exists' => 'The user does not exist'
+            'title.required' => 'A title is required.',
+            'description.required' => 'A description is required.',
+            'image.max' => 'The image size should not be more than 2MB.',
         ];
     }
 }
