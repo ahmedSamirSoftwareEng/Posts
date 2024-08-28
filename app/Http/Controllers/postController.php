@@ -19,7 +19,6 @@ class postController extends Controller
         // paginate posts Retrieve both active and soft-deleted posts
         $posts = Post::withTrashed()->paginate(3);
 
-
         return view('posts.index', compact('posts'));
     }
 

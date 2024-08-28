@@ -22,3 +22,7 @@ Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('po
 // GET|HEAD        up ..................................................................................
 #endregion
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
