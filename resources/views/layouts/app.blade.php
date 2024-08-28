@@ -20,7 +20,6 @@
 
 
 
-          <a class="nav-link" href="{{ route('users.index') }}">AllUsers</a>
             </ul>
         </div>
       </nav>
