@@ -52,12 +52,16 @@ Route::post('/sanctum/token', function (Request $request) {
 #endregion
 
 
-// Route::post('/sanctum/logout', function () {
-//     $user = Auth::user();
 
 
-//     $user->tokens()->delete();
+Route::post('/sanctum/logout', function (Request $request) {
+    if (! Auth::check()) {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    } else {
+        // Revoke the token that was used to authenticate the current request
+        $request->user()->currentAccessToken()->delete();
 
+        return response()->json(['message' => 'Logout successfully'], 200);
+    }
+})->middleware('auth:sanctum');
 
-//     return response()->json(['message' => 'Logged out successfully.'], 200);
-// })->middleware('auth:sanctum');
