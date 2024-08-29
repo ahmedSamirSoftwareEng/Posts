@@ -28,7 +28,7 @@
                     <th scope="col">trashed</th>
                     @auth
                     <th scope="col">Actions</th>
-                        
+
                     @endauth
                 </tr>
             </thead>
@@ -38,7 +38,7 @@
                         <th scope="row">{{ $post->id }}</th>
                         <td>{{ $post->title }}</td>
                         <td><img src="{{ asset('posts_images/images/' . $post->image) }}" width="100px" alt=""></td>
-                        <td>{{ $post->user->name }}</td>
+                        <td>{{ $post->user? $post->user->name : 'No-user' }}</td>
                         <td>{{ $post->created_at->format('Y-m-d') }}</td>
                         <td>{{ $post->slug }}</td>
                         <td>
