@@ -24,8 +24,12 @@
                     <th scope="col">Image</th>
                     <th scope="col">created by</th>
                     <th scope="col">created at</th>
+                    <th scope="col">Slug</th>
                     <th scope="col">trashed</th>
+                    @auth
                     <th scope="col">Actions</th>
+
+                    @endauth
                 </tr>
             </thead>
             <tbody>
@@ -34,8 +38,9 @@
                         <th scope="row">{{ $post->id }}</th>
                         <td>{{ $post->title }}</td>
                         <td><img src="{{ asset('posts_images/images/' . $post->image) }}" width="100px" alt=""></td>
-                        <td><a href="{{ route('users.show', $post->user->id) }}">{{ $post->user->name }}</a></td>
+                        <td>{{ $post->user? $post->user->name : 'No-user' }}</td>
                         <td>{{ $post->created_at->format('Y-m-d') }}</td>
+                        <td>{{ $post->slug }}</td>
                         <td>
                             @if ($post->trashed())
                                 <form action="{{ route('posts.restore', $post->id) }}" method="POST" style="display:inline;">
@@ -48,6 +53,8 @@
                         </td>
 
                         <td >
+                            @auth
+
                             <div class="d-flex justify-content-start gap-2">
 
 
@@ -77,6 +84,7 @@
 
                         </div>
 
+                        @endauth
                         </td>
                     </tr>
                 @endforeach
