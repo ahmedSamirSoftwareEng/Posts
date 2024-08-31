@@ -37,15 +37,15 @@ Auth::routes();
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// GET|HEAD        login ....................................... login › Auth\LoginController@showLoginForm
-//   POST            login ....................................................... Auth\LoginController@login
-//   POST            logout ............................................ logout › Auth\LoginController@logout
+// GET|HEAD        login ....................... login › Auth\LoginController@showLoginForm
+//   POST            login ......................................... Auth\LoginController@login
+//   POST            logout .......................... logout › Auth\LoginController@logout
 // GET|HEAD        register ....................... register › Auth\RegisterController@showRegistrationForm
 // POST            register .............................................. Auth\RegisterController@register
 
 
 
-//login with github
+#region login with github
 
 
 Route::get('/auth/redirect', function () {
@@ -77,3 +77,5 @@ Route::get('/auth/callback', function () {
     return redirect('/posts');
 
 })->name('github.callback');
+#endregion
+
