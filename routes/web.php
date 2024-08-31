@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\postController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+
 
 
 
@@ -34,3 +37,43 @@ Auth::routes();
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// GET|HEAD        login ....................................... login › Auth\LoginController@showLoginForm
+//   POST            login ....................................................... Auth\LoginController@login
+//   POST            logout ............................................ logout › Auth\LoginController@logout
+// GET|HEAD        register ....................... register › Auth\RegisterController@showRegistrationForm
+// POST            register .............................................. Auth\RegisterController@register
+
+
+
+//login with github
+
+
+Route::get('/auth/redirect', function () {
+    // return "github";
+    return Socialite::driver('github')->redirect();
+})->name('github.login');
+
+Route::get('/auth/callback', function () {
+    // return "redirected";
+
+        // $user = Socialite::driver('github')->stateless()->user();
+        // dd($user);
+    // $user->token
+
+    $githubUser = Socialite::driver('github')->stateless()->user();
+
+    $user = User::updateOrCreate([
+        'github_id' => $githubUser->id,
+    ], [
+        'name' => $githubUser->nickname,
+        'email' => $githubUser->email,
+        'password' => $githubUser->token,
+        'github_token' => $githubUser->token,
+        'github_refresh_token' => $githubUser->refreshToken,
+    ]);
+ 
+    Auth::login($user);
+ 
+    return redirect('/posts');
+
+})->name('github.callback');

@@ -65,6 +65,11 @@
                             </div>
                         </div>
                     </form>
+                    <div class="text-center m-2">
+                        <a class="btn btn-dark" href=" {{ route('github.login') }}"><i class="fab fa-github fa-xl"></i> Register with github</a>
+
+                    </div>
+
                 </div>
             </div>
         </div>
